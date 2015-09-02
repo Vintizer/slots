@@ -1,7 +1,7 @@
 var settings = {
-  firstColumn: 10,
+  firstColumn: 18,
   secondColumn: 26,
-  thirdColumn: 66,
+  thirdColumn: 46,
   picHeight: 100,
   picWidth: 100,
   firstPic: 'img/r1.gif',
@@ -12,6 +12,7 @@ var settings = {
 window.addEventListener('load', mainFunction);
 
 function mainFunction(){
+  var counterImg =0;
   var canvas1 = new fabric.Canvas('main1');
   var canvas2 = new fabric.Canvas('main2');
   var canvas3 = new fabric.Canvas('main3');
@@ -26,9 +27,9 @@ function mainFunction(){
   }
 
   function settingImg(images, number, name, cb) {
+    var imgGroup = new fabric.Group();
     var place;
     var i;
-    var imgGroup = new fabric.Group();
     for (i = 0; i < number + 2; i++) {
       place = settings.picHeight * (1.5 - i);
       images[i].set({ left: 0, top: place });
@@ -42,6 +43,22 @@ function mainFunction(){
         cb(imgGroup);
       })
   }
+  function checkArray(arr) {
+    var v;
+    return arr.reduce(function(sum, cur){
+      if (cur) v = 1;
+      else v =0;
+      return sum + v
+    })
+  }
+  function imgToArr(x, images, number, placeInGroup, cb, img) {
+    images[x] = img;
+    var chArr = images.filter(function (x) { return x; }).length;
+    if (chArr=== number + 2) {
+      counterImg = 0;
+      settingImg(images, number, placeInGroup, cb);
+    }
+    }
 
   function generateGroupByCount(canvasNumber, cb) {
     var images = [];
@@ -60,15 +77,10 @@ function mainFunction(){
         placeInGroup = settings.thirdPic;
         break;
     }
-    for (i = 0; i < number + 2; i++) {
+    for (var j = 0; j < number + 2; j++) {
       name = returnRandomFileName(0,12);
-      console.log(name + ' ' + canvasNumber);
-      fabric.Image.fromURL(name, function(img) {
-        images.push(img);
-        if (images.length === number + 2) {
-          settingImg(images, number, placeInGroup, cb);
-        }
-    })}
+      fabric.Image.fromURL(name, imgToArr.bind(null, j, images, number, placeInGroup, cb));
+    }
   }
 
   generateGroupByCount(1, function(group) {
