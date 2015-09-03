@@ -9,8 +9,7 @@ var settings = {
   firstPic: 'img/r1.gif',
   secondPic: 'img/r1.gif',
   thirdPic: 'img/r12.gif',
-  duration: 5000,
-  flag: false
+  duration: 5000
 };
 
 function mainFunction() {
